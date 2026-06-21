@@ -13,16 +13,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: '24'
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm i --legacy-peer-deps
+        run: bun install
 
       - name: Build Storybook
-        run: npm run build:lib && npm run build
+        run: bun run build:lib && bun run build
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
