@@ -27,4 +27,4 @@ jobs:
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist/storybook/@some-angular-utils/date-range-picker/browser # The folder the action should deploy.
+          folder: dist/date-range-picker/browser # The folder the action should deploy.
