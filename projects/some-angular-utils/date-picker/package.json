@@ -1,0 +1,31 @@
+{
+  "name": "@some-angular-utils/date-range-picker",
+  "version": "0.0.0",
+  "description": "Angular date range picker component with smart presets and a custom calendar",
+  "author": {
+    "name": "jose de los santos",
+    "email": "delossantosramosjose@gmail.com",
+    "url": "https://jose-web.github.io"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/some-angular-utils/date-range-picker.git"
+  },
+  "license": "MIT",
+  "homepage": "https://some-angular-utils.github.io/date-range-picker",
+  "keywords": [
+    "angular",
+    "date-range-picker",
+    "date-picker",
+    "angular-date-picker",
+    "utils"
+  ],
+  "peerDependencies": {
+    "@angular/common": "^21.0.0",
+    "@angular/core": "^21.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}

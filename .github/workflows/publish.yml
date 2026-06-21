@@ -1,0 +1,73 @@
+name: Publish Package to npm
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      # - name: Run tests
+      #   run: npm test
+
+      - name: copy README.md
+        run: cp README.md projects/some-angular-utils/date-picker/README.md
+
+      - name: build package before version update
+        run: npm run build:lib
+
+      - name: Update package.json version
+        working-directory: projects/some-angular-utils/date-picker
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          npm version "$TAG" --no-git-tag-version
+
+      - name: Commit updated package.json
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add projects/some-angular-utils/date-picker/package.json
+          git commit -m "Update package.json to version $TAG"
+          git push origin ${{ github.event.repository.default_branch }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: build package with updated version
+        run: npm run build:lib
+
+      - name: Publish to npm
+        working-directory: dist/some-angular-utils/date-range-picker
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - uses: healthplace/npmrc-registry-login-action@v1.0
+        with:
+          scope: '@some-angular-utils'
+          registry: 'https://npm.pkg.github.com'
+          auth-token: ${{ secrets.GITHUB_TOKEN }}
+          path: 'dist/some-angular-utils/date-range-picker'
+
+      - name: Publish to github npm
+        working-directory: dist/some-angular-utils/date-range-picker
+        run: npm publish --access public
