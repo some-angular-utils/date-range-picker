@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, effect, inject, OnDestroy, Renderer2, signal, WritableSignal } from '@angular/core';
 import { DOCUMENT, DatePipe } from '@angular/common';
 import { AbstractControl, FormControl, ValidationErrors } from '@angular/forms';
-import { DateRangeInputComponent } from '@some-angular-utils/date-range-picker';
+import { SAUDateRangePickerModule } from '@some-angular-utils/date-range-picker';
 import { CodeEditorComponent } from '../code-editor/code-editor';
 
 type DemoId = 'basic' | 'prefilled' | 'compact' | 'validation' | 'theme';
@@ -105,7 +105,7 @@ const THEME_CODE = `--sau-color-primary: rgb(35, 163, 31);
 @Component({
   selector: 'app-demos',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DateRangeInputComponent, CodeEditorComponent, DatePipe],
+  imports: [SAUDateRangePickerModule, CodeEditorComponent, DatePipe],
   templateUrl: './demos.html',
 })
 export class DemosComponent implements OnDestroy {

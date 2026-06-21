@@ -8,7 +8,7 @@
     "build": "ng build --base-href=/date-range-picker/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "build:lib": "ng-packagr -p projects/some-angular-utils/date-picker/ng-package.json"
+    "build:lib": "ng-packagr -p projects/some-angular-utils/date-range-picker/ng-package.json"
   },
   "prettier": {
     "printWidth": 100,

@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 export class InstallationComponent {
   installSnippet = `npm install @some-angular-utils/date-range-picker`;
 
-  importSnippet = `import { DateRangeInputComponent } from '@some-angular-utils/date-range-picker';
+  importSnippet = `import { SAUDateRangePickerModule} from '@some-angular-utils/date-range-picker';
 
 @Component({
   imports: [DateRangeInputComponent],

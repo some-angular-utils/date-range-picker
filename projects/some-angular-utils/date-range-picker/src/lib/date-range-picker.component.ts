@@ -9,12 +9,12 @@ interface DateRangeOption {
 }
 
 @Component({
-    selector: 'date-range-input',
-    templateUrl: './date-range-input.component.html',
-    styleUrl: './date-range-input.component.scss',
+    selector: 'sau-date-range-picker',
+    templateUrl: './date-range-picker.component.html',
+    styleUrl: './date-range-picker.component.scss',
     imports: [CommonModule, ReactiveFormsModule]
 })
-export class DateRangeInputComponent {
+export class SAUDateRangePickerModule {
     @Input() label = '';
     @Input() placeholder = 'Selecciona rango de fechas';
 

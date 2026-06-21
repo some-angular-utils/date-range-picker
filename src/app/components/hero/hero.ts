@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormControl } from '@angular/forms';
-import { DateRangeInputComponent } from '@some-angular-utils/date-range-picker';
+import { SAUDateRangePickerModule } from '@some-angular-utils/date-range-picker';
 
 @Component({
   selector: 'app-hero',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DateRangeInputComponent, DatePipe],
+  imports: [SAUDateRangePickerModule, DatePipe],
   templateUrl: './hero.html',
 })
 export class HeroComponent {
