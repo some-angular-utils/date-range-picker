@@ -22,7 +22,7 @@ jobs:
         run: npm i --legacy-peer-deps
 
       - name: Build Storybook
-        run: npm run build
+        run: npm run build:lib && npm run build
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
