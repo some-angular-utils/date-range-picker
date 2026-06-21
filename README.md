@@ -27,7 +27,7 @@ Then open http://localhost:4200.
 
 ## IMPORT
 ```ts
-import { DateRangeInputComponent } from '@some-angular-utils/date-range-picker';
+import { SAUDateRangePickerModule} from '@some-angular-utils/date-range-picker';
 
 @Component({
     imports: [DateRangeInputComponent],
