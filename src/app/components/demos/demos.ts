@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, effect, inject, OnDestroy, Renderer2, signal, WritableSignal } from '@angular/core';
 import { DOCUMENT, DatePipe } from '@angular/common';
 import { AbstractControl, FormControl, ValidationErrors } from '@angular/forms';
-import { SAUDateRangePickerModule } from '@some-angular-utils/date-range-picker';
+import { SAUDateRangePickerModule, DateRangeOption } from '@some-angular-utils/date-range-picker';
 import { CodeEditorComponent } from '../code-editor/code-editor';
 
-type DemoId = 'basic' | 'prefilled' | 'compact' | 'validation' | 'theme';
+type DemoId = 'basic' | 'prefilled' | 'compact' | 'presets' | 'validation' | 'theme';
 type DemoKind = 'js' | 'css';
 
 interface DemoConfig {
@@ -12,6 +12,7 @@ interface DemoConfig {
   placeholder?: string;
   initialValue?: [string, string] | null;
   required?: boolean;
+  dateRangeOptions?: DateRangeOption[];
   css?: string;
 }
 
@@ -93,6 +94,42 @@ const COMPACT_CODE = `{
   placeholder: 'Any date',
 }`;
 
+const PRESETS_CODE = `{
+  label: 'Quick filters',
+  placeholder: 'Select a date range',
+  dateRangeOptions: [
+    {
+      label: 'This week',
+      value: 'thisWeek',
+      getRange: () => {
+        const now = new Date();
+        const day = now.getDay() === 0 ? 6 : now.getDay() - 1;
+        const start = new Date(now); start.setDate(now.getDate() - day); start.setHours(0, 0, 0, 0);
+        const end = new Date(start); end.setDate(start.getDate() + 6); end.setHours(23, 59, 59, 999);
+        return [start, end];
+      },
+    },
+    {
+      label: 'Last 7 days',
+      value: 'last7days',
+      getRange: () => {
+        const end = new Date(); end.setHours(23, 59, 59, 999);
+        const start = new Date(); start.setDate(start.getDate() - 7); start.setHours(0, 0, 0, 0);
+        return [start, end];
+      },
+    },
+    {
+      label: 'Last 30 days',
+      value: 'last30days',
+      getRange: () => {
+        const end = new Date(); end.setHours(23, 59, 59, 999);
+        const start = new Date(); start.setDate(start.getDate() - 30); start.setHours(0, 0, 0, 0);
+        return [start, end];
+      },
+    },
+  ],
+}`;
+
 const VALIDATION_CODE = `{
   label: 'Stay dates',
   placeholder: 'Required — pick both dates',
@@ -119,6 +156,7 @@ export class DemosComponent implements OnDestroy {
     createDemo('basic', 'Basic usage', 'A date-range-input bound to a plain FormControl — no wrapper config needed.', 'js', BASIC_CODE),
     createDemo('prefilled', 'Pre-filled range', 'Pass an existing [start, end] pair and the calendar opens already positioned on it.', 'js', PREFILLED_CODE),
     createDemo('compact', 'No label', 'Leave label empty to drop it into a toolbar or compact filter bar.', 'js', COMPACT_CODE),
+    createDemo('presets', 'Custom presets', 'Override dateRangeOptions to replace the built-in Spanish presets with your own { label, value, getRange } list.', 'js', PRESETS_CODE),
     createDemo('validation', 'Required validation', 'Combine it with a standard validator — the Continue button stays disabled until both dates are picked.', 'js', VALIDATION_CODE),
     createDemo('theme', 'Theming', 'Every color is a CSS custom property. Edit the values below and watch it restyle instantly.', 'css', THEME_CODE),
   ];

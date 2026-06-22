@@ -75,7 +75,8 @@
                             [class.is-empty]="!day" [class.is-start]="isDateStart(day, currentMonth())"
                             [class.is-end]="isDateEnd(day, currentMonth())"
                             [class.is-within-range]="isDateSelected(day, currentMonth())"
-                            [class.is-hover-range]="isDateHovered(day, currentMonth())">
+                            [class.is-hover-range]="isDateHovered(day, currentMonth())"
+                            [class.is-today]="isToday(day, currentMonth())">
                             {{ day }}
                         </button>
                         }
@@ -95,7 +96,8 @@
                             [class.is-empty]="!day" [class.is-start]="isDateStart(day, nextMonthComputed())"
                             [class.is-end]="isDateEnd(day, nextMonthComputed())"
                             [class.is-within-range]="isDateSelected(day, nextMonthComputed())"
-                            [class.is-hover-range]="isDateHovered(day, nextMonthComputed())">
+                            [class.is-hover-range]="isDateHovered(day, nextMonthComputed())"
+                            [class.is-today]="isToday(day, nextMonthComputed())">
                             {{ day }}
                         </button>
                         }

@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, signal, computed, effect, Eleme
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormControl, ReactiveFormsModule } from '@angular/forms';
 
-interface DateRangeOption {
+export interface DateRangeOption {
     label: string;
     value: string;
     getRange: () => [Date, Date];
@@ -75,7 +75,7 @@ export class SAUDateRangePickerModule {
         }
     }
 
-    dateRangeOptions: DateRangeOption[] = [
+    @Input() dateRangeOptions: DateRangeOption[] = [
         {
             label: 'Hoy',
             value: 'today',
@@ -86,12 +86,12 @@ export class SAUDateRangePickerModule {
             }
         },
         {
-            label: 'Mañana',
-            value: 'tomorrow',
+            label: 'Ayer',
+            value: 'yesterday',
             getRange: () => {
-                const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1); tomorrow.setHours(0, 0, 0, 0);
-                const end = new Date(tomorrow); end.setHours(23, 59, 59, 999);
-                return [tomorrow, end];
+                const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1); yesterday.setHours(0, 0, 0, 0);
+                const end = new Date(yesterday); end.setHours(23, 59, 59, 999);
+                return [yesterday, end];
             }
         },
         {
@@ -114,12 +114,12 @@ export class SAUDateRangePickerModule {
             }
         },
         {
-            label: 'Próximo mes',
-            value: 'nextMonth',
+            label: 'Mes anterior',
+            value: 'previousMonth',
             getRange: () => {
                 const now = new Date();
-                const start = new Date(now.getFullYear(), now.getMonth() + 1, 1); start.setHours(0, 0, 0, 0);
-                const end = new Date(now.getFullYear(), now.getMonth() + 2, 0); end.setHours(23, 59, 59, 999);
+                const start = new Date(now.getFullYear(), now.getMonth() - 1, 1); start.setHours(0, 0, 0, 0);
+                const end = new Date(now.getFullYear(), now.getMonth(), 0); end.setHours(23, 59, 59, 999);
                 return [start, end];
             }
         },
@@ -134,12 +134,12 @@ export class SAUDateRangePickerModule {
             }
         },
         {
-            label: 'Próximo año',
-            value: 'nextYear',
+            label: 'Año anterior',
+            value: 'previousYear',
             getRange: () => {
                 const now = new Date();
-                const start = new Date(now.getFullYear() + 1, 0, 1); start.setHours(0, 0, 0, 0);
-                const end = new Date(now.getFullYear() + 1, 11, 31); end.setHours(23, 59, 59, 999);
+                const start = new Date(now.getFullYear() - 1, 0, 1); start.setHours(0, 0, 0, 0);
+                const end = new Date(now.getFullYear() - 1, 11, 31); end.setHours(23, 59, 59, 999);
                 return [start, end];
             }
         }
@@ -293,6 +293,12 @@ export class SAUDateRangePickerModule {
         if (!end) return false;
         const date = new Date(contextMonth.getFullYear(), contextMonth.getMonth(), day);
         return date.toDateString() === end.toDateString();
+    }
+
+    isToday(day: number | null, contextMonth: Date): boolean {
+        if (!day) return false;
+        const date = new Date(contextMonth.getFullYear(), contextMonth.getMonth(), day);
+        return date.toDateString() === new Date().toDateString();
     }
 
     formatDate(date: Date): string {
