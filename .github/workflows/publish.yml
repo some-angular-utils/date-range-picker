@@ -30,13 +30,13 @@ jobs:
       #   run: npm test
 
       - name: copy README.md
-        run: cp README.md projects/some-angular-utils/date-picker/README.md
+        run: cp README.md projects/some-angular-utils/date-range-picker/README.md
 
       - name: build package before version update
         run: npm run build:lib
 
       - name: Update package.json version
-        working-directory: projects/some-angular-utils/date-picker
+        working-directory: projects/some-angular-utils/date-range-picker
         run: |
           TAG="${{ github.event.release.tag_name }}"
           npm version "$TAG" --no-git-tag-version
@@ -46,7 +46,7 @@ jobs:
           TAG="${{ github.event.release.tag_name }}"
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add projects/some-angular-utils/date-picker/package.json
+          git add projects/some-angular-utils/date-range-picker/package.json
           git commit -m "Update package.json to version $TAG"
           git push origin ${{ github.event.repository.default_branch }}
         env:
