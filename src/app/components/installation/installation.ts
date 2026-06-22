@@ -26,6 +26,7 @@ constructor() {
   templateSnippet = `<date-range-input
   label="Travel dates"
   placeholder="Select a date range"
+  [dateRangeOptions]="dateRangeOptions"
   [formControlItem]="dateRange">
 </date-range-input>`;
 }
