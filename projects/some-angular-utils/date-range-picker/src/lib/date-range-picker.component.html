@@ -9,8 +9,11 @@
 
     <div class="sau-date-range__wrapper" (click)="toggleDropdown($event)">
 
-        <input type="text" readonly [placeholder]="placeholder" [value]="displayDate()" class="sau-date-range__input"
-            [class.is-active-view]="startDate() && endDate()">
+        <input type="text" [readonly]="!isEditingMainInput()" [placeholder]="placeholder" [value]="displayDate()"
+            class="sau-date-range__input" [class.is-active-view]="startDate() && endDate()"
+            (click)="onDisplayInputClick($event)" (dblclick)="onDisplayInputDblClick($event)"
+            (change)="onDisplayInputChange($event)" (keydown.enter)="onDisplayInputKeydown($event)"
+            (blur)="onDisplayInputBlur()">
 
         <div class="sau-date-range__arrow">
             <svg [class.is-open]="showDropdown() || showCalendar()" fill="none" viewBox="0 0 24 24"
@@ -108,6 +111,13 @@
 
             <div class="sau-date-range__footer">
                 <button type="button" (click)="clearSelection()" class="sau-date-range__clear-btn">Limpiar</button>
+                <div class="sau-date-range__manual-inputs">
+                    <input type="date" class="sau-date-range__date-input" [value]="formatDateForInput(startDate())"
+                        (change)="onStartDateInputChange($event)">
+                    <span class="sau-date-range__manual-inputs-separator">–</span>
+                    <input type="date" class="sau-date-range__date-input" [value]="formatDateForInput(endDate())"
+                        (change)="onEndDateInputChange($event)">
+                </div>
                 <button type="button" [disabled]="!startDate() || !endDate()" (click)="applyCustomRange()"
                     class="sau-date-range__apply-btn">
                     Aplicar Rango

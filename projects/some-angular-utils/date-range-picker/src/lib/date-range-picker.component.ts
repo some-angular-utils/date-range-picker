@@ -44,6 +44,7 @@ export class SAUDateRangePickerModule {
     currentMonth = signal(new Date());
     selectingEndDate = signal(false);
     hoveredDate = signal<Date | null>(null);
+    isEditingMainInput = signal(false);
 
     nextMonthComputed = computed(() => {
         const date = new Date(this.currentMonth());
@@ -303,6 +304,120 @@ export class SAUDateRangePickerModule {
 
     formatDate(date: Date): string {
         return new Intl.DateTimeFormat('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
+    }
+
+    formatDateForInput(date: Date | null): string {
+        if (!date) return '';
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    private parseDateInputValue(value: string): Date | null {
+        const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (!match) return null;
+        return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+    }
+
+    onStartDateInputChange(event: Event) {
+        const date = this.parseDateInputValue((event.target as HTMLInputElement).value);
+        if (!date) {
+            this.startDate.set(null);
+            return;
+        }
+        date.setHours(0, 0, 0, 0);
+        this.startDate.set(date);
+        this.currentMonth.set(new Date(date));
+
+        const end = this.endDate();
+        if (end && end < date) {
+            const endOfDay = new Date(date); endOfDay.setHours(23, 59, 59, 999);
+            this.endDate.set(endOfDay);
+        }
+    }
+
+    onEndDateInputChange(event: Event) {
+        const date = this.parseDateInputValue((event.target as HTMLInputElement).value);
+        if (!date) {
+            this.endDate.set(null);
+            return;
+        }
+        date.setHours(23, 59, 59, 999);
+
+        const start = this.startDate();
+        if (start && date < start) {
+            const newStart = new Date(date); newStart.setHours(0, 0, 0, 0);
+            this.startDate.set(newStart);
+        }
+        this.endDate.set(date);
+    }
+
+    private parseDisplayDateRange(value: string): [Date, Date] | null {
+        const parts = value.split('-').map(part => part.trim());
+        if (parts.length !== 2) return null;
+
+        const start = this.parseDDMMYYYY(parts[0]);
+        const end = this.parseDDMMYYYY(parts[1]);
+        if (!start || !end) return null;
+
+        start.setHours(0, 0, 0, 0);
+        end.setHours(23, 59, 59, 999);
+        if (end < start) return null;
+        return [start, end];
+    }
+
+    private parseDDMMYYYY(value: string): Date | null {
+        const match = value.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if (!match) return null;
+
+        const day = Number(match[1]);
+        const month = Number(match[2]);
+        const year = Number(match[3]);
+        const date = new Date(year, month - 1, day);
+        if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) return null;
+        return date;
+    }
+
+    onDisplayInputChange(event: Event) {
+        const input = event.target as HTMLInputElement;
+        const value = input.value.trim();
+
+        if (!value) {
+            this.clearSelection();
+            return;
+        }
+
+        const range = this.parseDisplayDateRange(value);
+        if (!range) {
+            input.value = this.displayDate();
+            return;
+        }
+
+        this.startDate.set(range[0]);
+        this.endDate.set(range[1]);
+        this.updateFormControl(range);
+    }
+
+    onDisplayInputKeydown(event: Event) {
+        (event.target as HTMLInputElement).blur();
+    }
+
+    onDisplayInputClick(event: MouseEvent) {
+        if (this.isEditingMainInput()) {
+            event.stopPropagation();
+        }
+    }
+
+    onDisplayInputDblClick(event: MouseEvent) {
+        event.stopPropagation();
+        this.isEditingMainInput.set(true);
+        const input = event.target as HTMLInputElement;
+        queueMicrotask(() => { input.focus(); input.select(); });
+    }
+
+    onDisplayInputBlur() {
+        this.isEditingMainInput.set(false);
     }
 
     getMonthYear(contextMonth: Date): string {
