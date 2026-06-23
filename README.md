@@ -30,7 +30,7 @@ Then open http://localhost:4200.
 import { SAUDateRangePickerModule} from '@some-angular-utils/date-range-picker';
 
 @Component({
-    imports: [DateRangeInputComponent],
+    imports: [SAUDateRangePickerModule],
     // ...
 })
 ```
