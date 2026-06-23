@@ -23,10 +23,10 @@ constructor() {
   });
 }`;
 
-  templateSnippet = `<date-range-input
+  templateSnippet = `<sau-date-range-picker
   label="Travel dates"
   placeholder="Select a date range"
   [dateRangeOptions]="dateRangeOptions"
   [formControlItem]="dateRange">
-</date-range-input>`;
+</sau-date-range-picker>`;
 }

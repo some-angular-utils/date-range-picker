@@ -34,7 +34,7 @@ function evalConfig(text: string): any {
   return new Function(`"use strict"; return (\n${text}\n);`)();
 }
 
-// date-range-input uses emulated encapsulation, so its own `.sau-date-range[_ngcontent-x]` rule has
+// sau-date-range-picker uses emulated encapsulation, so its own `.sau-date-range[_ngcontent-x]` rule has
 // the same specificity as our override and can win on source order alone — !important forces ours to win.
 function withImportant(declarations: string): string {
   return declarations.replace(/;\s*$/gm, ' !important;');
@@ -153,7 +153,7 @@ export class DemosComponent implements OnDestroy {
   activeTab = signal<DemoId>('basic');
 
   demos: DemoEntry[] = [
-    createDemo('basic', 'Basic usage', 'A date-range-input bound to a plain FormControl — no wrapper config needed.', 'js', BASIC_CODE),
+    createDemo('basic', 'Basic usage', 'A sau-date-range-picker bound to a plain FormControl — no wrapper config needed.', 'js', BASIC_CODE),
     createDemo('prefilled', 'Pre-filled range', 'Pass an existing [start, end] pair and the calendar opens already positioned on it.', 'js', PREFILLED_CODE),
     createDemo('compact', 'No label', 'Leave label empty to drop it into a toolbar or compact filter bar.', 'js', COMPACT_CODE),
     createDemo('presets', 'Custom presets', 'Override dateRangeOptions to replace the built-in Spanish presets with your own { label, value, getRange } list.', 'js', PRESETS_CODE),

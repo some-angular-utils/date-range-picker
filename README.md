@@ -48,11 +48,11 @@ constructor() {
 
 ## HTML
 ```html
-<date-range-input
+<sau-date-range-picker
     label="Travel dates"
     placeholder="Select a date range"
     [formControlItem]="dateRange">
-</date-range-input>
+</sau-date-range-picker>
 ```
 
 ## INPUTS
