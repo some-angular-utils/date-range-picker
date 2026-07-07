@@ -77,7 +77,18 @@ La demo de "Theming" inyecta un `<style>` global de forma imperativa vía `Rende
 
 Pero a diferencia de `sau-table` (que usa `ViewEncapsulation.None`), **`SAUDateRangePickerModule` usa encapsulación Emulated por defecto**. Eso significa que la propia regla `.sau-date-range { ... }` de la librería se compila como `.sau-date-range[_ngcontent-xxx] { ... }` — una clase + un atributo, exactamente la misma especificidad que nuestro override `.theme-live .sau-date-range` (dos clases). Con especificidad empatada, gana el orden de inserción en el `<head>`, que no es fiable (depende de cuándo Angular registra el stylesheet del componente vs. cuándo se ejecuta nuestro constructor). La solución es añadir `!important` a cada declaración generada (función `withImportant()` en `demos.ts`) — confirmado con pruebas, no es una suposición. Si se porta este patrón a otra librería, comprobar primero qué `ViewEncapsulation` usa el componente raíz antes de asumir que la especificidad por selectores basta.
 
-Las variables CSS `--sau-color-primary`/`--sau-color-background` en `date-range-picker.component.scss` no existían en el componente original — se añadieron expresamente para que la demo de Theming tuviera algo que tocar, siguiendo el mismo patrón que ya usaba `sau-filter`. Solo cubren el acento principal (texto "Rango personalizado...", botón Aplicar, día inicio/fin seleccionado) — los tonos secundarios del hover dentro del calendario quedaron hardcodeados a propósito, igual que en el `sau-filter` original.
+Las variables CSS públicas en `date-range-picker.component.scss` son tres: `--sau-color-primary` (acento), `--sau-color-background` (superficie) y `--sau-color-danger` (acciones destructivas: botón "Limpiar" del footer y fila "Limpiar rango" del dropdown). A partir de ellas el componente deriva internamente seis tintes con `color-mix()` — prefijados `--_*` para señalar que son privados y no forman parte de la API pública:
+
+| Variable interna     | Mezcla                                        | Uso                                         |
+|----------------------|-----------------------------------------------|---------------------------------------------|
+| `--_primary-subtle`  | `primary 15% + background`                    | fondo de días dentro del rango seleccionado |
+| `--_primary-faint`   | `primary 8% + background`                     | fondo de días en hover mientras se elige fin|
+| `--_primary-ghost`   | `primary 5% + background`                     | hover del botón "Rango personalizado..."    |
+| `--_primary-muted`   | `primary 65% + background`                    | color de texto en días en hover-range       |
+| `--_primary-ring`    | `primary 10% + transparent`                   | focus ring de inputs (box-shadow)           |
+| `--_danger-faint`    | `danger 6% + background`                      | hover del botón "Limpiar rango"             |
+
+Si cambias `--sau-color-primary` o `--sau-color-background` desde fuera (como hace la demo de Theming), todos los tintes derivados se recalculan solos. No hay valores de color hardcodeados para primary/background/danger — solo los grises neutros de la escala slate (`#334155`, `#64748b`, `#e2e8f0`, etc.) siguen siendo literales porque no son parte de la API de tematización.
 
 ## Cómo funciona el editor de las demos en vivo (`src/app/components/demos`)
 
