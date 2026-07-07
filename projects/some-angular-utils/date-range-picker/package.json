@@ -1,6 +1,6 @@
 {
   "name": "@some-angular-utils/date-range-picker",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Angular date range picker component with smart presets and a custom calendar",
   "author": {
     "name": "jose de los santos",
